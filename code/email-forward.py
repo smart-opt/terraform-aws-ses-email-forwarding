@@ -3,10 +3,11 @@ import os
 import email
 from email.mime.text import MIMEText
 
+region = os.environ['Region']
 
 def lambda_handler(event, context):
     s3 = boto3.client('s3')
-    ses = boto3.client('ses')
+    ses = boto3.client('ses', region)
 
     message_id = event['Records'][0]['ses']['mail']['messageId']
     print(f"Received message ID {message_id}")
