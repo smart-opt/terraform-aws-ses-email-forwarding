@@ -1,18 +1,18 @@
-# Terraform AWS SES Email Forwarding 
+# Terraform AWS SES Email Forwarding
 
 This module configures Amazon SES to forward emails to an existing account (gmail or something). This module will configure the following resources:
 
-* DNS verification, DKIM and MX domains. (Supported: `cloudflare` and `aws`)
-* SES rule set to save the incoming emails to S3 and to execute a Lambda.
-* Lambda that will forward the email from `sender` to `recipient`.
+- DNS verification, DKIM and MX domains.
+- SES rule set to save the incoming emails to S3 and to execute a Lambda.
+- Lambda that will forward the email from `sender` to `recipient`.
 
-This module implements the official solution by AWS: 
+This module implements the official solution by AWS:
 https://aws.amazon.com/blogs/messaging-and-targeting/forward-incoming-email-to-an-external-destination/
 
 ## Arguments
 
 | Name               | Type   | Required | Default         | Description                                          |
-|--------------------|--------|----------|-----------------|------------------------------------------------------|
+| ------------------ | ------ | -------- | --------------- | ---------------------------------------------------- |
 | `s3_bucket`        | String | Yes      |                 | S3 Bucket where emails will be stored                |
 | `s3_bucket_prefix` | String | Yes      |                 | Path inside the bucket where emails will be stored   |
 | `mail_sender`      | String | Yes      |                 | Email used to send messages from (when forwarding)   |
@@ -25,20 +25,19 @@ https://aws.amazon.com/blogs/messaging-and-targeting/forward-incoming-email-to-a
 ## Attributes
 
 | Name | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
+| ---- | ---- | -------- | ------- | ----------- |
 |      |      |          |         |             |
 
-## Example 
+## Example
 
-Let's imagine I want to configure `hello@aleix.cloud` domain to be available to the world, but I don't want to pay for an email service. 
+Let's imagine I want to configure `hello@aleix.cloud` domain to be available to the world, but I don't want to pay for an email service.
 
 I can use this module to register this email through an existing email, and send all incoming emails to my personal Gmail.
 
 ```
 module "ses-email-forwarding" {
-    source = "git@github.com:alemuro/terraform-ses-email-forwarding.git"
+    source = "git@github.com:smart-opt/terraform-aws-ses-email-forwarding.git"
 
-    dns_provider     = "cloudflare"
     domain           = "aleix.cloud"
     s3_bucket        = "amurtra"
     s3_bucket_prefix = "emails"
