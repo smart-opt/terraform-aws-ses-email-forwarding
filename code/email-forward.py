@@ -8,10 +8,18 @@ def lambda_handler(event, context):
     s3 = boto3.client('s3')
     ses = boto3.client('ses')
 
-    bucket_name = event['Records'][0]['s3']['bucket']['name']
-    key = event['Records'][0]['s3']['object']['key']
+    message_id = event['Records'][0]['ses']['mail']['messageId']
+    print(f"Received message ID {message_id}")
 
-    obj = s3.get_object(Bucket=bucket_name, Key=key)
+    incoming_email_bucket = os.environ['MailS3Bucket']
+    incoming_email_prefix = os.environ['MailS3Prefix']
+
+    if incoming_email_prefix:
+        object_path = (incoming_email_prefix + "/" + message_id)
+    else:
+        object_path = message_id
+
+    obj = s3.get_object(Bucket=incoming_email_bucket, Key=object_path)
     email_content = obj['Body'].read().decode('utf-8')
 
     msg = email.message_from_string(email_content)
